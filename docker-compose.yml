@@ -1,0 +1,27 @@
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - ./code:/code
+      - ./hosts:/etc/nginx/conf.d
+    links:
+      - php
+  php:
+    build: .
+    volumes:
+      - ./code:/code
+      - ./vendor:/vendor
+    env_file:
+      - .env
+    depends_on:
+      - db
+    links:
+      - db
+  db:
+    image: mysql:8.0
+    ports:
+      - '6603:3306'
+    env_file:
+      - .env
